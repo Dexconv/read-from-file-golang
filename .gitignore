@@ -1,2 +1,2 @@
 # the log files
-log/
+storage/*.txt
