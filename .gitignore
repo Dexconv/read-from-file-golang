@@ -1,2 +1,2 @@
 # the storage files
-storage/
+storage/*.txt
