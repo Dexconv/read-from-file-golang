@@ -1,13 +1,16 @@
 package main
 
 import (
+	"crypto/sha1"
 	"fmt"
 	"html/template"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 var tpl *template.Template
@@ -41,7 +44,11 @@ func index(w http.ResponseWriter, r *http.Request){
 		}
 		s = string(bs)
 
-		dst, err := os.Create(filepath.Join("./storage/",h.Filename))
+		ext := strings.Split(h.Filename, ".")[1]
+		hash := sha1.New()
+		io.Copy(hash, f)
+		fname := fmt.Sprintf("%x", hash.Sum(nil))+"."+ext
+		dst, err := os.Create(filepath.Join("./storage/",fname))
 		if err != nil{
 			http.Error(w, http.StatusText(500), 500)
 			log.Fatalln(err)
